@@ -1,9 +1,9 @@
 {
-  "name": "cordova-plugin-crop",
-  "version": "0.2.0",
+  "name": "nexxa-cordova-plugin-crop",
+  "version": "0.1.1",
   "description": "Crop an image in a Cordova app",
   "cordova": {
-    "id": "cordova-plugin-crop",
+    "id": "nexxa-cordova-plugin-crop",
     "platforms": [
       "android",
       "ios"
@@ -11,7 +11,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/jeduan/cordova-plugin-crop"
+    "url": "https://github.com/Nexxa/cordova-plugin-crop"
   },
   "keywords": [
     "cordova",
