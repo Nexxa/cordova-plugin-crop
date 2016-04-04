@@ -29,7 +29,7 @@
         NSURL *bundleURL = [[NSBundle mainBundle] URLForResource:@"PEPhotoCropEditor" withExtension:@"bundle"];
         bundle = [[NSBundle alloc] initWithURL:bundleURL];
     });
-    
+
     return bundle;
 }
 
@@ -40,22 +40,22 @@ static inline NSString *PELocalizedString(NSString *key, NSString *comment)
 
 - (instancetype)initWithCoder:(NSCoder *)aDecoder {
     self = [super initWithCoder:aDecoder];
-    
+
     if (self) {
         [self commonInit];
     }
-    
+
     return self;
 }
 
 - (instancetype)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil {
-    
+
     self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
-    
+
     if (self) {
         [self commonInit];
     }
-    
+
     return self;
 }
 
@@ -71,7 +71,7 @@ static inline NSString *PELocalizedString(NSString *key, NSString *comment)
     contentView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
     contentView.backgroundColor = [UIColor blackColor];
     self.view = contentView;
-    
+
     self.cropView = [[PECropView alloc] initWithFrame:contentView.bounds];
     [contentView addSubview:self.cropView];
 }
@@ -79,7 +79,7 @@ static inline NSString *PELocalizedString(NSString *key, NSString *comment)
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-    
+
     self.navigationController.navigationBar.translucent = NO;
     self.navigationController.toolbar.translucent = NO;
 
@@ -95,22 +95,22 @@ static inline NSString *PELocalizedString(NSString *key, NSString *comment)
                                                                                        target:nil
                                                                                        action:nil];
         UIBarButtonItem *constrainButton = [[UIBarButtonItem alloc] initWithTitle:PELocalizedString(@"Constrain", nil)
-                                                                            style:UIBarButtonItemStyleBordered
+                                                                            style:UIBarButtonItemStylePlain
                                                                            target:self
                                                                            action:@selector(constrain:)];
         self.toolbarItems = @[flexibleSpace, constrainButton, flexibleSpace];
     }
     self.navigationController.toolbarHidden = self.toolbarHidden;
-    
+
     self.cropView.image = self.image;
-    
+
     self.cropView.rotationGestureRecognizer.enabled = _rotationEnabled;
 }
 
 - (void)viewDidAppear:(BOOL)animated
 {
     [super viewDidAppear:animated];
-    
+
     if (self.cropAspectRatio != 0) {
         self.cropAspectRatio = self.cropAspectRatio;
     }
@@ -120,7 +120,7 @@ static inline NSString *PELocalizedString(NSString *key, NSString *comment)
     if (!CGRectEqualToRect(self.imageCropRect, CGRectZero)) {
         self.imageCropRect = self.imageCropRect;
     }
-    
+
     self.keepingCropAspectRatio = self.keepingCropAspectRatio;
 }
 
@@ -153,11 +153,11 @@ static inline NSString *PELocalizedString(NSString *key, NSString *comment)
 {
     _cropRect = cropRect;
     _imageCropRect = CGRectZero;
-    
+
     CGRect cropViewCropRect = self.cropView.cropRect;
     cropViewCropRect.origin.x += cropRect.origin.x;
     cropViewCropRect.origin.y += cropRect.origin.y;
-    
+
     CGSize size = CGSizeMake(fminf(CGRectGetMaxX(cropViewCropRect) - CGRectGetMinX(cropViewCropRect), CGRectGetWidth(cropRect)),
                              fminf(CGRectGetMaxY(cropViewCropRect) - CGRectGetMinY(cropViewCropRect), CGRectGetHeight(cropRect)));
     cropViewCropRect.size = size;
@@ -168,7 +168,7 @@ static inline NSString *PELocalizedString(NSString *key, NSString *comment)
 {
     _imageCropRect = imageCropRect;
     _cropRect = CGRectZero;
-    
+
     self.cropView.imageCropRect = imageCropRect;
 }
 
