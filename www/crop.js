@@ -1,12 +1,19 @@
-/* global cordova */
-var crop = module.exports = function cropImage (success, fail, image, options) {
-  options = options || {}
-  options.quality = options.quality || 100
-  return cordova.exec(success, fail, 'CropPlugin', 'cropImage', [image, options])
+/*eslint-env node, es6*/
+/*global cordova*/
+
+module.exports = crop;
+module.exports.promise = cropAsync;
+
+function crop(success, fail, image, options) {
+  var spec = Object.create((options || {}));
+
+  spec.quality = spec.quality || 100;
+
+  return cordova.exec(success, fail, 'CropPlugin', 'cropImage', [image, options]);
 }
 
-module.exports.promise = function cropAsync (image, options) {
+function cropAsync(image, options) {
   return new Promise(function (resolve, reject) {
-    crop(resolve, reject, image, options)
-  })
+    crop(resolve, reject, image, options);
+  });
 }
