@@ -1,6 +1,6 @@
 {
   "name": "nexxa-cordova-plugin-crop",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "description": "Crop an image in a Cordova app",
   "cordova": {
     "id": "cordova-plugin-crop",
