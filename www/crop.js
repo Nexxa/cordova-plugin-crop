@@ -9,7 +9,7 @@ function crop(success, fail, image, options) {
 
   spec.quality = spec.quality || 100;
 
-  return cordova.exec(success, fail, 'CropPlugin', 'cropImage', [image, options]);
+  return cordova.exec(success, fail, 'CropPlugin', 'cropImage', [image, spec]);
 }
 
 function cropAsync(image, options) {
