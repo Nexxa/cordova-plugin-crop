@@ -23,24 +23,27 @@ public class CropPlugin extends CordovaPlugin {
 
     @Override
     public boolean execute(String action, JSONArray args, final CallbackContext callbackContext) throws JSONException {
-      if (action.equals("cropImage")) {
-          String imagePath = args.getString(0);
+        if (action.equals("cropImage")) {
+            String imagePath = args.getString(0);
 
-          this.inputUri = Uri.parse(imagePath);
-          this.outputUri = Uri.fromFile(new File(getTempDirectoryPath() + "/cropped.jpg"));
+            this.inputUri = Uri.parse(imagePath);
+            this.outputUri = Uri.fromFile(new File(getTempDirectoryPath() + "/cropped.jpg"));
 
-          PluginResult pr = new PluginResult(PluginResult.Status.NO_RESULT);
-          pr.setKeepCallback(true);
-          callbackContext.sendPluginResult(pr);
-          this.callbackContext = callbackContext;
+            PluginResult pr = new PluginResult(PluginResult.Status.NO_RESULT);
+            pr.setKeepCallback(true);
+            callbackContext.sendPluginResult(pr);
+            this.callbackContext = callbackContext;
 
-          cordova.setActivityResultCallback(this);
-          Crop.of(this.inputUri, this.outputUri)
-                  .asSquare()
-                  .start(cordova.getActivity());
-          return true;
-      }
-      return false;
+            cordova.setActivityResultCallback(this);
+
+            Crop.of(this.inputUri, this.outputUri)
+                .asSquare()
+                .start(cordova.getActivity());
+
+            return true;
+        }
+
+        return false;
     }
 
     @Override
@@ -50,6 +53,7 @@ public class CropPlugin extends CordovaPlugin {
                 Uri imageUri = Crop.getOutput(intent);
                 this.callbackContext.success("file://" + imageUri.getPath() + "?" + System.currentTimeMillis());
                 this.callbackContext = null;
+
             } else if (resultCode == Crop.RESULT_ERROR) {
                 try {
                     JSONObject err = new JSONObject();
@@ -57,9 +61,11 @@ public class CropPlugin extends CordovaPlugin {
                     err.put("code", String.valueOf(resultCode));
                     this.callbackContext.error(err);
                     this.callbackContext = null;
+
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
+
             } else if (resultCode == Activity.RESULT_CANCELED) {
                 try {
                     JSONObject err = new JSONObject();
@@ -67,11 +73,13 @@ public class CropPlugin extends CordovaPlugin {
                     err.put("code", "userCancelled");
                     this.callbackContext.error(err);
                     this.callbackContext = null;
+
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
             }
         }
+
         super.onActivityResult(requestCode, resultCode, intent);
     }
 
@@ -81,7 +89,7 @@ public class CropPlugin extends CordovaPlugin {
         // SD Card Mounted
         if (Environment.getExternalStorageState().equals(Environment.MEDIA_MOUNTED)) {
             cache = new File(Environment.getExternalStorageDirectory().getAbsolutePath() +
-                    "/Android/data/" + cordova.getActivity().getPackageName() + "/cache/");
+            "/Android/data/" + cordova.getActivity().getPackageName() + "/cache/");
         }
         // Use internal storage
         else {
@@ -90,6 +98,7 @@ public class CropPlugin extends CordovaPlugin {
 
         // Create the cache directory if it doesn't exist
         cache.mkdirs();
+        
         return cache.getAbsolutePath();
     }
 }
