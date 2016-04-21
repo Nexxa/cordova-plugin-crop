@@ -5,6 +5,7 @@
 @interface CTCrop ()
 @property (copy) NSString* callbackId;
 @property (assign) NSUInteger quality;
+@property (assign) NSUInteger toSize;
 @end
 
 @implementation CTCrop
@@ -14,8 +15,10 @@
     NSString *imagePath = [command.arguments objectAtIndex:0];
     NSDictionary *options = [command.arguments objectAtIndex:1];
     id quality = options[@"quality"] ?: @100;
+    id toSize = options[@"toSize"] ?: @1080;
 
     self.quality = [quality unsignedIntegerValue];
+    self.toSize = [toSize unsignedIntegerValue];
     NSString *filePrefix = @"file://";
 
     if ([imagePath hasPrefix:filePrefix]) {
@@ -66,18 +69,30 @@
     [controller dismissViewControllerAnimated:YES completion:nil];
     if (!self.callbackId) return;
 
-    NSData *data = UIImageJPEGRepresentation(croppedImage, (CGFloat) self.quality);
-    NSString* filePath = [self tempFilePath:@"jpg"];
     CDVPluginResult *result;
     NSError *err;
 
-    // save file
-    if (![data writeToFile:filePath options:NSAtomicWrite error:&err]) {
-        result = [CDVPluginResult resultWithStatus:CDVCommandStatus_IO_EXCEPTION messageAsString:[err localizedDescription]];
+    CGSize cgToSize = CGSizeMake((CGFloat) self.toSize, (CGFloat) self.toSize);
+    UIImage *scaledImg = [croppedImage scaleToSize:cgToSize];
+
+    if (!scaledImg) {
+        result = [CDVPluginResult resultWithStatus:CDVCommandStatus_ERROR messageAsString:@"Error on scaling image"];
+
     }
     else {
-        result = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsString:[[NSURL fileURLWithPath:filePath] absoluteString]];
+
+        NSData *data = UIImageJPEGRepresentation(scaledImg, (CGFloat) self.quality);
+        NSString* filePath = [self tempFilePath:@"jpg"];
+
+        // save file
+        if (![data writeToFile:filePath options:NSAtomicWrite error:&err]) {
+            result = [CDVPluginResult resultWithStatus:CDVCommandStatus_IO_EXCEPTION messageAsString:[err localizedDescription]];
+        }
+        else {
+            result = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsString:[[NSURL fileURLWithPath:filePath] absoluteString]];
+        }
     }
+
 
     [self.commandDelegate sendPluginResult:result callbackId:self.callbackId];
     self.callbackId = nil;
