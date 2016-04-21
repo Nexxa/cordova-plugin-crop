@@ -1,6 +1,3 @@
-/*eslint-env node, es6*/
-/*global cordova*/
-
 module.exports = crop;
 module.exports.promise = cropAsync;
 
