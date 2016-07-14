@@ -22,6 +22,8 @@ public class CropPlugin extends CordovaPlugin {
     private static final int MAX_SIZE                     = 1080;
     private static final String ANDROID_DATA_PATH         = "/Android/data/";
     private static final String CACHE_PATH                = "/cache/";
+    private static final String ERROR_NULL_IMG_MSG        = "The image cannot be cropped";
+    private static final String ERROR_NULL_IMG_CODE       = "nullImage";
     private static final String ERROR_CROPPING_MSG        = "Error on cropping";
     private static final String ERROR_USER_CANCELLED_MSG  = "User cancelled";
     private static final String ERROR_USER_CANCELLED_CODE = "userCancelled";
@@ -39,6 +41,18 @@ public class CropPlugin extends CordovaPlugin {
             JSONObject options = args.optJSONObject(1);
             int toSize = this.MAX_SIZE;
 
+            this.callbackContext = callbackContext;
+
+            if (imagePath.equals("null")) {
+                sendError(ERROR_NULL_IMG_MSG, ERROR_NULL_IMG_CODE);
+
+                return false;
+            }
+
+            if (!imagePath.startsWith(FILE_PATH_PREFIX)) {
+                imagePath = FILE_PATH_PREFIX.concat(imagePath);
+            }
+
             if (options != null) {
                 toSize = options.optInt("toSize", MAX_SIZE);
             }
@@ -49,7 +63,6 @@ public class CropPlugin extends CordovaPlugin {
             PluginResult pr = new PluginResult(PluginResult.Status.NO_RESULT);
             pr.setKeepCallback(true);
             callbackContext.sendPluginResult(pr);
-            this.callbackContext = callbackContext;
 
             cordova.setActivityResultCallback(this);
 
@@ -69,43 +82,34 @@ public class CropPlugin extends CordovaPlugin {
         if (requestCode == Crop.REQUEST_CROP) {
             if (resultCode == Activity.RESULT_OK) {
                 Uri imageUri = Crop.getOutput(intent);
-                String resultFilePath = FILE_PATH_PREFIX + imageUri.getPath()
-                                            + "?" + System.currentTimeMillis();
+                String resultFilePath = FILE_PATH_PREFIX + imageUri.getPath() + "?" + System.currentTimeMillis();
 
                 this.callbackContext.success(resultFilePath);
                 this.callbackContext = null;
 
             } else if (resultCode == Crop.RESULT_ERROR) {
-                try {
-                    JSONObject err = new JSONObject();
-
-                    err.put("message", ERROR_CROPPING_MSG);
-                    err.put("code", String.valueOf(resultCode));
-
-                    this.callbackContext.error(err);
-                    this.callbackContext = null;
-
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
+                sendError(ERROR_CROPPING_MSG, String.valueOf(resultCode));
 
             } else if (resultCode == Activity.RESULT_CANCELED) {
-                try {
-                    JSONObject err = new JSONObject();
-
-                    err.put("message", ERROR_USER_CANCELLED_MSG);
-                    err.put("code", ERROR_USER_CANCELLED_CODE);
-
-                    this.callbackContext.error(err);
-                    this.callbackContext = null;
-
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
+                sendError(ERROR_USER_CANCELLED_MSG, ERROR_USER_CANCELLED_CODE);
             }
         }
 
         super.onActivityResult(requestCode, resultCode, intent);
+    }
+
+    private void sendError(String message, String code) {
+        try {
+            JSONObject err = new JSONObject();
+
+            err.put("message", message);
+            err.put("code", code);
+
+            this.callbackContext.error(err);
+            this.callbackContext = null;
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
     }
 
     private String getTempDirectoryPath() {
@@ -123,8 +127,10 @@ public class CropPlugin extends CordovaPlugin {
 
         // Create the cache directory if it doesn't exist
         cache.mkdirs();
+
+        return cache.getAbsolutePath();
     }
-    
+
     public Bundle onSaveInstanceState() {
         Bundle state = new Bundle();
 
