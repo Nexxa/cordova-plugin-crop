@@ -3,9 +3,13 @@
   "version": "0.2.0",
   "description": "Crop an image in a Cordova app",
   "author": "Jeduan Cornejo (https://github.com/jeduan)",
-  "contributors": ["StefanoMagrassi <stefano.magrassi@gmail.com> (https://github.com/StefanoMagrassi)"],
+  "contributors": [
+    "StefanoMagrassi <stefano.magrassi@gmail.com> (https://github.com/StefanoMagrassi)"
+  ],
   "scripts": {
-    "lint": "eslint ./www/crop.js"
+    "bump": "node ./scripts/bump",
+    "lint": "eslint ./www/crop.js",
+    "postversion": "npm run bump"
   },
   "engines": {
     "node": ">=0.12"
@@ -33,6 +37,8 @@
   "license": "MIT",
   "devDependencies": {
     "eslint": "3.0.1",
-    "eslint-config-nexxa": "1.1.3"
+    "eslint-config-nexxa": "1.1.3",
+    "nexxa-partial": "1.0.1",
+    "xml2js": "0.4.17"
   }
 }
