@@ -1,6 +1,5 @@
 package com.jeduan.crop;
 
-import android.util.Log;
 import android.app.Activity;
 import android.content.Intent;
 import android.net.Uri;
@@ -27,7 +26,7 @@ public class CropPlugin extends CordovaPlugin {
     private static final String ERROR_USER_CANCELLED_MSG  = "User cancelled";
     private static final String ERROR_USER_CANCELLED_CODE = "userCancelled";
     private static final String FILE_PATH_PREFIX          = "file://";
-    private static final String RESULT_FILE_NAME          = "/cropped.jpg";
+    private static final String RESULT_FILE_NAME_SUFFIX   = "-cropped.jpg";
 
     private CallbackContext callbackContext;
     private Uri inputUri;
@@ -45,7 +44,7 @@ public class CropPlugin extends CordovaPlugin {
             }
 
             this.inputUri = Uri.parse(imagePath);
-            this.outputUri = Uri.fromFile(new File(getTempDirectoryPath() + "/" + System.currentTimeMillis()+ "-cropped.jpg"));
+            this.outputUri = Uri.fromFile(new File(getTempDirectoryPath() + "/" + System.currentTimeMillis() + RESULT_FILE_NAME_SUFFIX));
 
             PluginResult pr = new PluginResult(PluginResult.Status.NO_RESULT);
             pr.setKeepCallback(true);
