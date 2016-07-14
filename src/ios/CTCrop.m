@@ -28,8 +28,8 @@
 
     if (!(image = [UIImage imageWithContentsOfFile:imagePath])) {
         NSDictionary *err = @{
-                              @"message": @"Image doesn't exist",
-                              @"code": @"ENOENT"
+                              @"message": @"The image cannot be cropped",
+                              @"code": @"nullImage"
                               };
         CDVPluginResult *pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_ERROR messageAsDictionary:err];
         [self.commandDelegate sendPluginResult:pluginResult callbackId:command.callbackId];
@@ -76,7 +76,12 @@
     UIImage *scaledImg = [croppedImage scaleToSize:cgToSize];
 
     if (!scaledImg) {
-        result = [CDVPluginResult resultWithStatus:CDVCommandStatus_ERROR messageAsString:@"Error on scaling image"];
+        NSDictionary *errObject = @{
+          @"message": @"Error on cropping image",
+          @"code": @"cropError"
+        };
+
+        result = [CDVPluginResult resultWithStatus:CDVCommandStatus_ERROR messageAsDictionary:errObject];
 
     }
     else {
@@ -103,7 +108,7 @@
     NSDictionary *err = @{
                           @"message": @"User cancelled",
                           @"code": @"userCancelled"
-                          };
+                        };
     CDVPluginResult *pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_ERROR messageAsDictionary:err];
     [self.commandDelegate sendPluginResult:pluginResult callbackId:self.callbackId];
     self.callbackId = nil;

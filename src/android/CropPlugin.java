@@ -1,5 +1,6 @@
 package com.jeduan.crop;
 
+import android.util.Log;
 import android.app.Activity;
 import android.content.Intent;
 import android.net.Uri;
@@ -19,16 +20,21 @@ import java.io.File;
 
 public class CropPlugin extends CordovaPlugin {
 
+    private static final String LOG_TAG = "android-crop";
+
     private static final int MAX_SIZE                     = 1080;
     private static final String ANDROID_DATA_PATH         = "/Android/data/";
     private static final String CACHE_PATH                = "/cache/";
-    private static final String ERROR_NULL_IMG_MSG        = "The image cannot be cropped";
-    private static final String ERROR_NULL_IMG_CODE       = "nullImage";
-    private static final String ERROR_CROPPING_MSG        = "Error on cropping";
-    private static final String ERROR_USER_CANCELLED_MSG  = "User cancelled";
-    private static final String ERROR_USER_CANCELLED_CODE = "userCancelled";
     private static final String FILE_PATH_PREFIX          = "file://";
     private static final String RESULT_FILE_NAME_SUFFIX   = "-cropped.jpg";
+
+    // Errors
+    private static final String ERROR_NULL_IMG_MSG        = "The image cannot be cropped";
+    private static final String ERROR_NULL_IMG_CODE       = "nullImage";
+    private static final String ERROR_CROPPING_MSG        = "Error on cropping image";
+    private static final String ERROR_CROPPING_CODE       = "cropError";
+    private static final String ERROR_USER_CANCELLED_MSG  = "User cancelled";
+    private static final String ERROR_USER_CANCELLED_CODE = "userCancelled";
 
     private CallbackContext callbackContext;
     private Uri inputUri;
@@ -88,7 +94,9 @@ public class CropPlugin extends CordovaPlugin {
                 this.callbackContext = null;
 
             } else if (resultCode == Crop.RESULT_ERROR) {
-                sendError(ERROR_CROPPING_MSG, String.valueOf(resultCode));
+                Log.e(LOG_TAG, "Crop result error: " + String.valueOf(resultCode));
+
+                sendError(ERROR_CROPPING_MSG, ERROR_CROPPING_CODE);
 
             } else if (resultCode == Activity.RESULT_CANCELED) {
                 sendError(ERROR_USER_CANCELLED_MSG, ERROR_USER_CANCELLED_CODE);
