@@ -1,3 +1,8 @@
+/**
+ * @file Cordova Crop Plugin javascript handlers
+ * @author StefanoMagrassi <stefano.magrassi@gmail.com>, Jeduan Cornejo
+ */
+
 module.exports = crop;
 module.exports.promise = cropAsync;
 
@@ -16,7 +21,7 @@ function crop(success, fail, image, options) {
 }
 
 function cropAsync(image, options) {
-  return new Promise(function (resolve, reject) {
+  return new Promise(function cropP(resolve, reject) {
     crop(resolve, reject, image, options);
   });
 }

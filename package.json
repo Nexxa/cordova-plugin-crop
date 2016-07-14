@@ -2,6 +2,14 @@
   "name": "nexxa-cordova-plugin-crop",
   "version": "0.2.0",
   "description": "Crop an image in a Cordova app",
+  "author": "Jeduan Cornejo (https://github.com/jeduan)",
+  "contributors": ["StefanoMagrassi <stefano.magrassi@gmail.com> (https://github.com/StefanoMagrassi)"],
+  "scripts": {
+    "lint": "eslint ./www/crop.js"
+  },
+  "engines": {
+    "node": ">=0.12"
+  },
   "cordova": {
     "id": "cordova-plugin-crop",
     "platforms": [
@@ -22,5 +30,9 @@
     "image manipulation",
     "crop"
   ],
-  "license": "MIT"
+  "license": "MIT",
+  "devDependencies": {
+    "eslint": "3.0.1",
+    "eslint-config-nexxa": "1.1.3"
+  }
 }

@@ -1,20 +1,14 @@
 {
-  "extends": "eslint:recommended",
+  "extends": "nexxa",
   "globals": {
     "cordova": true
   },
   "rules": {
-    "indent": [2, 2, {
-      "VariableDeclarator": 2
-    }],
-    "one-var": [2, "never"],
-    "quotes": [2, "single"],
-    "linebreak-style": [2, "unix"],
-    "semi": [2, "always"],
-    "no-console": 0
+    "no-console": "off",
+    "no-var": "off",
+    "prefer-arrow-callback": ["error", { "allowNamedFunctions": true }]
   },
   "env": {
-    "es6": true,
     "commonjs": true,
     "node": true
   }
