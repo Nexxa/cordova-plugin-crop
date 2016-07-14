@@ -123,7 +123,8 @@ public class CropPlugin extends CordovaPlugin {
 
         // Create the cache directory if it doesn't exist
         cache.mkdirs();
-
+    }
+    
     public Bundle onSaveInstanceState() {
         Bundle state = new Bundle();
 
