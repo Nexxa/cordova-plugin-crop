@@ -6,7 +6,7 @@ Crop an image in a Cordova app
 ## Install
 
 ```
-$ cordova plugin add --save cordova-plugin-crop
+$ cordova plugin add --save https://github.com/Nexxa/cordova-plugin-crop
 ```
 
 ## Usage
